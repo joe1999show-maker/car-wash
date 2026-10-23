@@ -259,7 +259,8 @@ function Booking() {
                 onClick={() => setVeh(i)}
                 className={`flex flex-col items-center gap-3 rounded-lg border px-2 py-5 text-center font-semibold transition hover:-translate-y-1 hover:shadow-md ${veh === i ? "border-sky bg-sky text-navy-foreground" : "bg-card text-navy"}`}
               >
-                <img src={`/cars/${i + 1}.png`} alt={v} loading="lazy" className="h-14 object-contain" />
+                <img src={`${import.meta.env.BASE_URL}cars/${i + 1}.png`
+} alt={v} loading="lazy" className="h-14 object-contain" />
                 <span className="text-[15px] leading-tight">{i + 1}. {v}</span>
               </button>
             ))}

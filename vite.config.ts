@@ -7,6 +7,7 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+   vite: { base: "/car-wash/" },
   nitro: false,
    tanstackStart: {
     server: { entry: "server" },
