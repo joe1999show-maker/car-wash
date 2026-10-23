@@ -29,13 +29,13 @@ jobs:
 
       - run: bun install --frozen-lockfile
       - run: bun run build
-      - run: test -f dist/index.html
+      - run: test -f dist/client/index.html
 
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: dist/client
 
       - name: Deploy
         id: deployment
