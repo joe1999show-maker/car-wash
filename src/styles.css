@@ -1,0 +1,87 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Lato", system-ui, sans-serif;
+  --font-display: "Poppins", system-ui, sans-serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-navy: var(--navy);
+  --color-navy-foreground: var(--navy-foreground);
+  --color-sky: var(--sky);
+  --color-go: var(--go);
+  --color-go-foreground: var(--go-foreground);
+  --color-star: var(--star);
+}
+
+:root {
+  --radius: 0.75rem;
+  --background: oklch(0.985 0.004 250);
+  --foreground: oklch(0.22 0.06 262);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.06 262);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.06 262);
+  --primary: oklch(0.67 0.2 42);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.01 250);
+  --secondary-foreground: oklch(0.22 0.06 262);
+  --muted: oklch(0.95 0.01 250);
+  --muted-foreground: oklch(0.5 0.03 260);
+  --accent: oklch(0.72 0.14 235);
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.9 0.015 255);
+  --input: oklch(0.9 0.015 255);
+  --ring: oklch(0.72 0.14 235);
+  --navy: oklch(0.22 0.07 262);
+  --navy-foreground: oklch(0.98 0 0);
+  --sky: oklch(0.75 0.14 230);
+  --go: oklch(0.74 0.17 148);
+  --go-foreground: oklch(1 0 0);
+  --star: oklch(0.82 0.17 80);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  body { background-color: var(--color-background); color: var(--color-foreground); font-family: var(--font-sans); }
+  h1, h2, h3 { font-family: var(--font-display); }
+  html { scroll-behavior: smooth; }
+}
+
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@utility animate-marquee { animation: marquee 30s linear infinite; }
+
+@keyframes draw { from { stroke-dashoffset: 600; } to { stroke-dashoffset: 0; } }
+@utility animate-draw { stroke-dasharray: 600; stroke-dashoffset: 600; animation: draw 1.4s ease-out 0.4s forwards; }
+@keyframes scrolldot { 0% { transform: translateY(0); opacity: 1; } 80% { transform: translateY(14px); opacity: 0; } 100% { opacity: 0; } }
+@utility animate-scrolldot { animation: scrolldot 1.6s ease-in-out infinite; }
+@keyframes fadeup { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+@utility animate-fadeup { animation: fadeup 0.8s ease-out both; }
+@keyframes popin { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+@utility animate-popin { animation: popin 0.4s ease-out both; }
