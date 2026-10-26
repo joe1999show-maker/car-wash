@@ -1,0 +1,196 @@
+// ================== SETTINGS ==================
+var BUSINESS_NAME  = "Absolute Car Cleaning";
+var OWNER_EMAIL    = "joe1999.show@gmail.com";   // where you receive booking notifications
+var SLOT_MINUTES   = 90;
+var TIME_ZONE      = "Europe/Brussels";        // also set this in Project Settings
+// ==============================================
+
+// Runs on form submit (trigger: From form -> On form submit)
+function onFormSubmit(e) {
+  var r = e.response.getItemResponses();
+  processBooking({
+    name:     r[0].getResponse(),
+    email:    r[1].getResponse(),
+    phone:    r[2].getResponse(),
+    dateTime: r[3].getResponse(),   // "YYYY-MM-DD HH:MM"
+    options:  r[4].getResponse(),
+    total:    r[5].getResponse()
+  });
+}
+
+// Run this ONCE manually from the editor to test the emails.
+// It creates a real calendar event, so delete it afterwards.
+function testBooking() {
+  processBooking({
+    name: "Test Klant",
+    email: "joe1999.show@gmail.com",
+    phone: "0470 00 00 00",
+    dateTime: "2026-12-01 14:00",
+    options: "Premium pakket (test)",
+    total: "€99.00"
+  });
+}
+
+// Re-runs the script on the latest real form response (for debugging)
+function replayLastResponse() {
+  var responses = FormApp.getActiveForm().getResponses();
+  var last = responses[responses.length - 1];
+  onFormSubmit({ response: last });
+}
+
+function processBooking(b) {
+  var start = new Date(b.dateTime.replace(" ", "T"));
+  var end   = new Date(start.getTime() + SLOT_MINUTES * 60 * 1000);
+
+  var calendar = CalendarApp.getDefaultCalendar();
+
+  // Check for overlap BEFORE creating the new event
+  var conflicts = calendar.getEvents(start, end);
+
+  calendar.createEvent(BUSINESS_NAME + " - " + b.name, start, end, {
+    description:
+      "--- CLIENT INFO ---\n" +
+      "Naam: " + b.name + "\n" +
+      "Email: " + b.email + "\n" +
+      "Telefoon: " + b.phone + "\n\n" +
+      "--- ORDER DETAILS ---\n" +
+      "Gekozen: " + b.options + "\n" +
+      "-------------------------\n" +
+      "TOTAAL TE BETALEN: " + b.total,
+    location: "Klant Locatie aan Huis"
+  });
+
+  var dateNice = Utilities.formatDate(start, TIME_ZONE, "EEEE d MMMM yyyy");
+  var timeNice = Utilities.formatDate(start, TIME_ZONE, "HH:mm");
+
+  sendClientEmail(b, dateNice, timeNice, start, end);
+  sendOwnerEmail(b, dateNice, timeNice, conflicts.length);
+}
+
+// ---------- Calendar links for the client ----------
+// Builds a "Add to Google Calendar" link and an .ics file (Apple, Outlook, etc.)
+function calendarLinks(b, start, end) {
+  var fmt = function (d) {
+    return Utilities.formatDate(d, "UTC", "yyyyMMdd'T'HHmmss'Z'");
+  };
+  var title   = BUSINESS_NAME + " afspraak";
+  var details = "Pakket: " + b.options + "\nTotaal: " + b.total;
+
+  var google = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+    "&text="     + encodeURIComponent(title) +
+    "&dates="    + fmt(start) + "/" + fmt(end) +
+    "&details="  + encodeURIComponent(details) +
+    "&location=" + encodeURIComponent("Bij u thuis");
+
+  var ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//" + BUSINESS_NAME + "//NL",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    "UID:" + fmt(start) + "-" + Utilities.getUuid() + "@booking",
+    "DTSTAMP:" + fmt(new Date()),
+    "DTSTART:" + fmt(start),
+    "DTEND:"   + fmt(end),
+    "SUMMARY:" + title,
+    "DESCRIPTION:" + details.replace(/\n/g, "\\n"),
+    "LOCATION:Bij u thuis",
+    "END:VEVENT",
+    "END:VCALENDAR"
+  ].join("\r\n");
+
+  return {
+    google: google,
+    blob: Utilities.newBlob(ics, "text/calendar", "afspraak.ics")
+  };
+}
+
+// ---------- Client email ----------
+function sendClientEmail(b, dateNice, timeNice, start, end) {
+  var cal = calendarLinks(b, start, end);
+
+  var html =
+    '<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#222">' +
+      '<h2 style="color:#0b2a4a">Bedankt voor uw boeking, ' + esc(b.name) + '!</h2>' +
+      '<p>We hebben uw aanvraag ontvangen. Hieronder vindt u een overzicht.</p>' +
+      '<table style="width:100%;border-collapse:collapse">' +
+        row("Datum", dateNice) +
+        row("Tijdstip", timeNice) +
+        row("Pakket", b.options) +
+        row("Totaalprijs", b.total + " (te betalen op locatie)") +
+      '</table>' +
+      '<p style="margin-top:20px">' +
+        '<a href="' + cal.google + '" style="background:#0b2a4a;color:#ffffff;padding:10px 18px;' +
+        'border-radius:6px;text-decoration:none;display:inline-block">📅 Toevoegen aan agenda</a>' +
+      '</p>' +
+      '<p style="color:#666;font-size:13px">Gebruikt u Apple Agenda of Outlook? Open dan de bijlage ' +
+      '<em>afspraak.ics</em>.</p>' +
+      '<p style="margin-top:20px">Wij komen op het afgesproken tijdstip bij u langs. ' +
+      'Kunt u niet? Antwoord gewoon op deze e-mail.</p>' +
+      '<p>Tot binnenkort,<br><strong>' + BUSINESS_NAME + '</strong></p>' +
+    '</div>';
+
+  MailApp.sendEmail({
+    to: b.email,
+    replyTo: OWNER_EMAIL,
+    name: BUSINESS_NAME,
+    subject: "Bevestiging afspraak - " + dateNice + " om " + timeNice,
+    body: "Bedankt voor uw boeking, " + b.name + "!\n\n" +
+          "Datum: " + dateNice + "\nTijdstip: " + timeNice + "\n" +
+          "Pakket: " + b.options + "\nTotaal: " + b.total + "\n\n" +
+          "Toevoegen aan Google Agenda: " + cal.google + "\n\n" + BUSINESS_NAME,
+    htmlBody: html,
+    attachments: [cal.blob]
+  });
+}
+
+// ---------- Owner email ----------
+function sendOwnerEmail(b, dateNice, timeNice, conflictCount) {
+  var warning = conflictCount > 0
+    ? '<p style="background:#fff3cd;border:1px solid #ffe08a;padding:10px;border-radius:6px">' +
+      '⚠️ <strong>Let op:</strong> er staan al ' + conflictCount +
+      ' andere afspraak/afspraken in deze tijdsslot. Neem contact op met de klant.</p>'
+    : '';
+
+  var html =
+    '<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#222">' +
+      '<h2 style="color:#0b2a4a">Nieuwe boeking</h2>' +
+      warning +
+      '<table style="width:100%;border-collapse:collapse">' +
+        row("Klant", b.name) +
+        row("Telefoon", '<a href="tel:' + esc(b.phone) + '">' + esc(b.phone) + '</a>', true) +
+        row("Email", '<a href="mailto:' + esc(b.email) + '">' + esc(b.email) + '</a>', true) +
+        row("Datum", dateNice) +
+        row("Tijdstip", timeNice) +
+        row("Pakket", b.options) +
+        row("Te ontvangen", b.total) +
+      '</table>' +
+      '<p style="margin-top:20px;color:#666;font-size:13px">De afspraak is automatisch aan uw agenda toegevoegd.</p>' +
+    '</div>';
+
+  MailApp.sendEmail({
+    to: OWNER_EMAIL,
+    replyTo: b.email,
+    subject: (conflictCount > 0 ? "⚠️ DUBBELE BOEKING? " : "Nieuwe boeking: ") +
+             b.name + " - " + dateNice + " " + timeNice,
+    body: "Nieuwe boeking\n\nKlant: " + b.name + "\nTel: " + b.phone +
+          "\nEmail: " + b.email + "\nDatum: " + dateNice + " " + timeNice +
+          "\nPakket: " + b.options + "\nTotaal: " + b.total,
+    htmlBody: html
+  });
+}
+
+// ---------- Helpers ----------
+function row(label, value, isHtml) {
+  return '<tr>' +
+    '<td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;width:35%">' + label + '</td>' +
+    '<td style="padding:8px;border-bottom:1px solid #eee">' + (isHtml ? value : esc(value)) + '</td>' +
+    '</tr>';
+}
+
+// Escape user input so it can't inject HTML into the emails
+function esc(s) {
+  return String(s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}

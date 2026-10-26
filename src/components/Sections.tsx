@@ -1,9 +1,20 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Check, MessageCircle, X } from "lucide-react";
 import before from "@/assets/before.jpg";
 import after from "@/assets/after.jpg";
+import { constructNow } from "date-fns";
 
-const IMG = (f: string) => `https://absolutecarcleaning.nl/wp-content/uploads/2026/06/${f}`;
+// const IMG = (f: string) => `https://absolutecarcleaning.nl/wp-content/uploads/2026/06/${f}`;
+// const IMG = (f: string) => {
+//   return`/car-wash/assets/gallery/${f}`;
+
+// };
+// 1. Static glob maps all images cleanly at build time (universal matching keys)
+const ASSET_REGISTRY = import.meta.glob("@/assets/gallery/*.{jpeg,jpg,png}", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
 
 export function BeforeAfter() {
   const [pos, setPos] = useState(50);
@@ -85,27 +96,81 @@ export function BrandsOffer() {
   );
 }
 
+
 const SERVICES = [
-  { t: "Auto Detailing Diensten Nederland – Topprofessioneel", img: "16.png" },
-  { t: "Auto Interieur Reinigen Nederland – Professioneel en Betaalbaar", img: "14.png" },
-  { t: "Auto Stoom Reinigen Service in Rotterdam", img: "20.png" },
+  { t: "Auto Detailing Diensten – Topprofessioneel", img: "3.jpeg" },
+  { t: "Auto Interieur Reinigen – Professioneel en Betaalbaar", img: "4.jpeg" },
+  // { t: "Auto Stoom Reinigen Service in Rotterdam", img: "20.png" },
 ];
 
 export function Services() {
-  return (
+   // 2. Hydration Shield State: Ensures client-only image loading paths
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+   // 3. Safe Lookup Routine: Normalizes keys across server and client layers
+  const getAssetUrl = (filename: string): string => {
+    const cleanKey = `/src/assets/gallery/${filename}`;
+    return ASSET_REGISTRY[cleanKey] || "";
+  };
+
+  // return (
+  //   <section className="mx-auto max-w-6xl px-6 py-12">
+  //     <p className="text-center text-primary">Ontdek</p>
+  //     <h2 className="text-center text-4xl font-bold">Onze diensten</h2>
+  //     <div className="mt-10 grid gap-6 md:grid-cols-3">
+  //       {SERVICES.map((s) => (
+  //         <a key={s.t} href="#" className="reveal group overflow-hidden rounded-2xl bg-card shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+  //           <div className="overflow-hidden"><img src={"/src/assets/gallery/"+s.img} alt={s.t} loading="lazy" className="h-60 w-full object-cover transition-transform duration-700 group-hover:scale-110" /></div>
+  //           <div className="flex items-start justify-between gap-3 p-5">
+  //             <h3 className="font-semibold">{s.t}</h3>
+  //             <ArrowRight className="shrink-0 text-primary transition-transform group-hover:translate-x-1" />
+  //           </div>
+  //         </a>
+  //       ))}
+  //     </div>
+  //   </section>
+  // );
+   return (
     <section className="mx-auto max-w-6xl px-6 py-12">
       <p className="text-center text-primary">Ontdek</p>
       <h2 className="text-center text-4xl font-bold">Onze diensten</h2>
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
-        {SERVICES.map((s) => (
-          <a key={s.t} href="#" className="reveal group overflow-hidden rounded-2xl bg-card shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-            <div className="overflow-hidden"><img src={IMG(s.img)} alt={s.t} loading="lazy" className="h-60 w-full object-cover transition-transform duration-700 group-hover:scale-110" /></div>
-            <div className="flex items-start justify-between gap-3 p-5">
-              <h3 className="font-semibold">{s.t}</h3>
-              <ArrowRight className="shrink-0 text-primary transition-transform group-hover:translate-x-1" />
-            </div>
-          </a>
-        ))}
+      <div className="mt-10 grid gap-6 md:grid-cols-2">
+        {SERVICES.map((s) => {
+          // Resolve the image path safely
+          const imgSrc = getAssetUrl(s.img);
+
+          return (
+            <a 
+              key={s.t} 
+              href="#" 
+              className="reveal group overflow-hidden rounded-2xl bg-card shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div className="overflow-hidden bg-muted h-60 w-full">
+                {/* 
+                  4. The Hydration Shield: 
+                  Only render the actual src string once mounted in the browser. 
+                  This keeps the initial server render and initial client render 100% identical.
+                */}
+                {isMounted ? (
+                  <img 
+                    src={imgSrc} 
+                    alt={s.t} 
+                    loading="lazy" 
+                    className="h-60 w-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                  />
+                ) : (
+                  <div className="h-full w-full bg-gray-100 animate-pulse" />
+                )}
+              </div>
+              <div className="flex items-start justify-between gap-3 p-5">
+                <h3 className="font-semibold">{s.t}</h3>
+                <ArrowRight className="shrink-0 text-primary transition-transform group-hover:translate-x-1" />
+              </div>
+            </a>
+          );
+        })}
       </div>
     </section>
   );
