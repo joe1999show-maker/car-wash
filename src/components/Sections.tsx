@@ -15,6 +15,19 @@ const ASSET_REGISTRY = import.meta.glob("@/assets/gallery/*.{jpeg,jpg,png}", {
   query: "?url",
   import: "default",
 }) as Record<string, string>;
+import { constructNow } from "date-fns";
+
+// const IMG = (f: string) => `https://absolutecarcleaning.nl/wp-content/uploads/2026/06/${f}`;
+// const IMG = (f: string) => {
+//   return`/car-wash/assets/gallery/${f}`;
+
+// };
+// 1. Static glob maps all images cleanly at build time (universal matching keys)
+const ASSET_REGISTRY = import.meta.glob("@/assets/gallery/*.{jpeg,jpg,png}", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
 
 export function BeforeAfter() {
   const [pos, setPos] = useState(50);
@@ -164,10 +177,10 @@ export function BrandsOffer() {
   );
 }
 
+
 const SERVICES = [
   { t: "Auto Detailing Diensten – Topprofessioneel", img: "3.jpeg" },
-  { t: "Auto Interieur Reinigen – Professioneel en Betaalbaar", img: "4.jpeg" },
-  // { t: "Auto Stoom Reinigen Service in Rotterdam", img: "20.png" },
+  { t: "Auto Interieur Reinigen – Professioneel en Betaalbaar", img: "4.jpeg" }
 ];
 
 export function Services() {
