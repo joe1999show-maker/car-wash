@@ -7,6 +7,7 @@ import {
   InfoTexts,
   Partners,
   Services,
+  Contact
 } from "@/components/Sections";
 import Booking from "./booking";
 import KCleanAnimatedBanner from "./banner";
@@ -84,45 +85,7 @@ export function Container() {
         <div className="relative mx-auto max-w-7xl px-6 pb-20 pt-12">
           <h1 className="animate-fadeup text-5xl font-bold leading-tight md:text-7xl lg:text-8xl">
             Geef jouw auto de luxe behandeling die hij verdient!
-            {/* <span className="relative inline-block text-sky">
-              poetsen
-              <svg
-                viewBox="0 0 300 30"
-                preserveAspectRatio="none"
-                className="absolute -bottom-4 left-0 h-6 w-full text-go"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="5"
-                strokeLinecap="round"
-              >
-                <path className="animate-draw" d="M3 12 C 80 4, 200 4, 297 10" />
-                <path
-                  className="animate-draw [animation-delay:0.9s]"
-                  d="M40 24 C 120 15, 200 16, 260 20"
-                />
-              </svg>
-            </span>{" "}
-            op locatie. */}
           </h1>
-          {/* <ul className="mt-20 space-y-4 text-2xl md:ml-72 md:text-4xl">
-            {["140+ 5-sterren reviews", "Wij komen bij u aan huis", "Inclusief voorrijkosten"].map(
-              (t, i) => (
-                <li
-                  key={t}
-                  className="flex animate-fadeup items-center gap-4"
-                  style={{ animationDelay: `${0.8 + i * 0.25}s` }}
-                >
-                  <span
-                    className="grid size-6 animate-popin place-items-center rounded-full bg-go"
-                    style={{ animationDelay: `${1 + i * 0.25}s` }}
-                  >
-                    <Check size={14} className="text-go-foreground" />
-                  </span>
-                  {t}
-                </li>
-              ),
-            )}
-          </ul> */}
           <div className="mt-14 flex animate-fadeup flex-col items-center gap-6 [animation-delay:1.8s]">
             {/* <div className="flex items-center gap-2 font-semibold">
               <span className="font-display font-bold">G</span> 5.0 <Stars /> 164 recensies
@@ -187,48 +150,18 @@ export function Container() {
           ))}
         </div>
       </section>
-
-      {/* <section id="reviews" className="mx-auto max-w-6xl px-6 py-12">
-        <div className="text-center">
-          <p className="font-display text-2xl font-bold">UITSTEKEND</p>
-          <Stars size={24} />
-          <p className="mt-1 text-muted-foreground">
-            Gebaseerd op <b>164 recensies</b> op Google
-          </p>
-        </div>
-        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {REVIEWS.map((r) => (
-            <div
-              key={r.n}
-              className="reveal rounded-xl bg-card p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-            >
-              <div className="flex items-center gap-3">
-                <span className="grid size-10 place-items-center rounded-full bg-accent font-bold text-accent-foreground">
-                  {r.n[0]!.toUpperCase()}
-                </span>
-                <div>
-                  <p className="font-semibold">{r.n}</p>
-                  <p className="text-xs text-muted-foreground">{r.d}</p>
-                </div>
-              </div>
-              <div className="mt-3">
-                <Stars size={14} />
-              </div>
-              <p className="mt-2 text-sm">{r.t}</p>
-            </div>
-          ))}
-        </div>
-      </section> */}
-
       <BeforeAfter />
-      <BookingIntro />
-      <Booking />
-      {/* <BrandsOffer /> */}
       <Services />
       <InfoTexts />
-      <Partners />
+      <BookingIntro />
+      <Booking />
+      <Contact/>
+      {/* <BrandsOffer /> */}
+
+      {/* <Partners /> */}
       <Footer />
       <ChatWidget />
+    
     </div>
   );
 }

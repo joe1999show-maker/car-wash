@@ -33,7 +33,7 @@ export function Gallery() {
           <img
             key={`${srcUrl}-${i}`}
             src={srcUrl}
-            alt={`Absolute Car Cleaning op locatie - Sfeerimpressie ${i + 1}`}
+            alt={`KClean op locatie - Sfeerimpressie ${i + 1}`}
             loading="lazy"
             className="h-64 w-40 sm:h-72 sm:w-48 shrink-0 snap-start rounded-2xl object-cover transition-transform duration-500 hover:scale-105 shadow-sm"
           />

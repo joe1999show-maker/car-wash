@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
-import { BookingCalendar } from "./bookingcalander";
 import { Step } from "./step";
 import { Check } from "lucide-react";
-import { FreeBookingForm } from "./freebookingform";
 import { AppointmentForm } from "./appointmentform";
 
 const VEHICLES = [
@@ -14,25 +12,6 @@ const VEHICLES = [
   ["Bestelwagen (bijv. VW Caddy)", 30],
   ["Bestelbus (bijv. Mercedes Vito)", 40],
 ] as const;
-
-// const IN = [
-//   "Stofzuigen",
-//   "Matten reinigen",
-//   "Ramen binnenkant reinigen",
-//   "Kunststof (dashboard e.d.) verzorgen",
-//   "Ventilatie reinigen",
-// ];
-
-// const OUT = [
-//   "Buitenkant wassen met premium shampoo",
-//   "Kunststof (bumpers e.d.) verzorgen",
-//   "Ramen buitenkant reinigen",
-//   "Deurstijlen / dorpels reinigen",
-//   "Velgen reinigen",
-//   "Banden poetsen / behandelen",
-//   "Spray wax aanbrengen",
-// ];
-
 const PLANS = [
   {
     name: "Basic Shine",
@@ -112,10 +91,10 @@ export default function Booking() {
   const total =
     plan === null
       ? 0
-      : PLANS[plan]!.price + VEHICLES[veh]![1] + extras.reduce((s, e) => s + EXTRAS[e]!.price, 0);
-  //   const dur = plan === null ? 0 : PLANS[plan]!.dur + extras.reduce((s, e) => s + EXTRAS[e]!.dur, 0);
-  // In PLANS you can delete the `extras: []` field entirely.
-
+      : PLANS[plan]!.price 
+      // + VEHICLES[veh]![1] 
+      // + extras.reduce((s, e) => s + EXTRAS[e]!.price, 0);
+  
   const dur = plan === null ? 0 : PLANS[plan]!.dur + extras.reduce((s, e) => s + EXTRAS[e]!.dur, 0);
 
   const extraNames = extras.map((e) => EXTRAS[e]!.name);
@@ -133,7 +112,7 @@ export default function Booking() {
   return (
     <section id="afspraak" className="bg-secondary">
       <div className="mx-auto max-w-6xl px-6 py-10">
-        <Step n="01" eyebrow="Bereken je prijs" title="Kies je auto">
+        {/* <Step n="01" eyebrow="Bereken je prijs" title="Kies je auto">
           <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
             {VEHICLES.map(([v], i) => (
               <button
@@ -153,8 +132,8 @@ export default function Booking() {
               </button>
             ))}
           </div>
-        </Step>
-        <Step n="02" eyebrow="Kies je pakket" title="Kies je plan">
+        </Step> */}
+        <Step n="01" eyebrow="Kies jouw behandeling" title="Kies je plan">
           <div className="grid gap-6 md:grid-cols-3">
             {PLANS.map((p, i) => (
               <div
@@ -185,7 +164,7 @@ export default function Booking() {
           </div>
         </Step>
         <Step
-          n="03"
+          n="02"
           title="Kies extra opties (na keuze van pakket)"
           note="Verschijnt na keuze pakket"
         >
@@ -208,79 +187,25 @@ export default function Booking() {
                     />
                     {x.name}
                   </span>
-                  <span className="font-semibold">+{eur(x.price)}</span>
+                  {/* <span className="font-semibold">+{eur(x.price)}</span> */}
                 </label>
               ))}
             </div>
           )}
         </Step>
-        {/* <Step
-          n="04"
-          title="Wanneer komt het u het beste uit voor onze komst?"
-          note="Let op: dit is een voorkeursmoment. De definitieve afspraak wordt bevestigd na overleg."
-        >
-           <BookingCalendar />
-        </Step> */}
-
         <Step
-          n="04"
-          title="Afronden"
+          n="03"
+          title="Staat uw gewenste datum "
           note="*Staat uw gewenste datum of tijd er niet bij? Neem gerust contact met ons op via de chat."
         >
-          <div className="grid gap-8 md:grid-cols-2">
-            {/* <dl className="space-y-3 rounded-2xl bg-card p-6">
-              {[
-                ["Voertuigtype", VEHICLES[veh]![0]],
-                ["Gekozen pakket", plan === null ? "Geen pakket geselecteerd" : PLANS[plan]!.name],
-                [
-                  "Extra opties",
-                  extras.length
-                    ? extras.map((e) => EXTRAS[e]!.name).join(", ")
-                    : "Geen extra opties geselecteerd",
-                ],
-                ["Boekingsdatum", slot ?? "Geen datum geselecteerd"],
-                // ["Boekingsduur", `${dur} minuten`],
-              ].map(([k, v]) => (
-                <div key={k}>
-                  <dt className="text-sm font-semibold">{k}</dt>
-                  <dd className="text-muted-foreground">{v}</dd>
-                </div>
-              ))}
-              <div className="border-t pt-3">
-                <dt className="text-sm font-semibold">Totaalbedrag incl. BTW</dt>
-                <dd className="font-display text-3xl font-bold text-accent">{eur(total)}</dd>
-              </div>
-            </dl> */}
-            {/* <FreeBookingForm 
-            calculatedTotal={total} 
-            chosenPlanDetails={chosenPlanDetails} /> */}
+          <div className="grid gap-8 md:grid-cols-1">
+          
             <AppointmentForm 
             calculatedTotal={total} 
             chosenPlanDetails={chosenPlanDetails}
             duration={dur}
             />
-            {/* <div className="space-y-4">
-              <button
-                disabled={plan === null || !slot}
-                onClick={() => setDone(true)}
-                className="w-full rounded-full bg-go py-4 text-lg font-bold text-go-foreground disabled:opacity-50"
-              >
-                Bevestig boeking
-              </button>
-              {done && (
-                <p className="rounded-lg bg-card p-4 font-semibold text-go">
-                  Bedankt! Wij bevestigen uw poetsbeurt zo snel mogelijk.
-                </p>
-              )}
-              <ul className="space-y-1 text-sm text-muted-foreground">
-                <li>
-                  * Prijs is incl. voorrijkosten en 21% BTW. U betaalt pas als wij klaar zijn.
-                </li>
-                <li>Het gekozen pakket kan, mits gewenst, ter plaatse worden gewijzigd.</li>
-                <li>Op al onze werkzaamheden zijn onze algemene voorwaarden van toepassing.</li>
-                <li>Uw gegevens worden niet gedeeld.</li>
-              </ul>
-            </div> */}
+          
           </div>
         </Step>
       </div>

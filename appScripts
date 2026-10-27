@@ -1,5 +1,5 @@
 // ================== SETTINGS ==================
-var BUSINESS_NAME  = "Absolute Car Cleaning";
+var BUSINESS_NAME  = "KClean";
 var OWNER_EMAIL    = "joe1999.show@gmail.com";   // where you receive booking notifications
 var SLOT_MINUTES   = 90;
 var TIME_ZONE      = "Europe/Brussels";        // also set this in Project Settings

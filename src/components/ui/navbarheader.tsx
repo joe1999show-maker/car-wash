@@ -51,12 +51,12 @@ export default function NavbarHeader() {
             Home
           </a>
           <a
-            href="#"
+            href="#onze-diensten"
             className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
           >
             Onze diensten
           </a>
-          <a
+          {/* <a
             href="#"
             className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
           >
@@ -67,9 +67,9 @@ export default function NavbarHeader() {
             className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
           >
             Referenties
-          </a>
+          </a> */}
           <a
-            href="#"
+            href="#over-ons"
             className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
           >
             Over ons
@@ -80,7 +80,7 @@ export default function NavbarHeader() {
           >
             Contact
           </a>
-          <a
+          {/* <a
             href="#"
             className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
           >
@@ -91,7 +91,7 @@ export default function NavbarHeader() {
             className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
           >
             Shop
-          </a>
+          </a> */}
         </nav>
 
         {/* RIGHT ACTION BUTTON SECTION */}

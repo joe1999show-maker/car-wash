@@ -18,7 +18,7 @@ export function BookingCalendar() {
             style={{ border: 0 }}
             width="100%"
             height="650"
-            title="Absolute Car Cleaning Booking Calendar"
+            title="KClean Booking Calendar"
             className="w-full rounded-2xl"
             loading="lazy"
           />

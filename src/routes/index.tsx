@@ -4,13 +4,13 @@ import { Container } from "@/components/ui/container";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Absolute Car Cleaning — Professioneel auto poetsen op locatie" },
+      { title: "KClean — Professioneel auto poetsen op locatie" },
       {
         name: "description",
         content:
           "Mobiele autoreiniging bij u aan huis of op kantoor. 5.0 op Google, inclusief voorrijkosten. Boek direct online.",
       },
-      { property: "og:title", content: "Absolute Car Cleaning — Auto poetsen op locatie" },
+      { property: "og:title", content: "KClean — Auto poetsen op locatie" },
       {
         property: "og:description",
         content: "Mobiele autoreiniging bij u aan huis. Boek direct online.",
