@@ -12,7 +12,7 @@ const VEHICLES = [
   ["Bestelwagen (bijv. VW Caddy)", 30],
   ["Bestelbus (bijv. Mercedes Vito)", 40],
 ] as const;
-const PLANS = [
+export const PLANS = [
   {
     name: "Basic Shine",
     description: "Een grondige opfrisbeurt voor een schoon en verzorgd auto-interieur.",

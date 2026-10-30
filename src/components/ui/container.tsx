@@ -16,6 +16,7 @@ import hero from "@/assets/hero.jpg";
 import { Gallery } from "./gallery";
 import { useEffect, useState } from "react";
 import NavBarHeader from "./navbarheader";
+import { Step } from "./step";
 
 const USP = [
   { icon: Trophy, t: "Beste prijs/kwaliteit verhouding" },
@@ -45,6 +46,15 @@ const REVIEWS = [
   },
 ];
 
+const VEHICLES = [
+  ["Normale auto (bijv. VW Golf, Audi A3)", 0],
+  ["Middelgrote auto (bijv. Audi A4, A5)", 10],
+  ["Grote auto (bijv. Audi A6, A7)", 20],
+  ["SUV (bijv. Audi Q3, Q5)", 25],
+  ["Pick-up (bijv. Dodge Ram)", 35],
+  ["Bestelwagen (bijv. VW Caddy)", 30],
+  ["Bestelbus (bijv. Mercedes Vito)", 40],
+] as const;
 export function useReveal() {
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -69,6 +79,9 @@ function Stars({ size = 16 }: { size?: number }) {
 export function Container() {
   useReveal();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [veh, setVeh] = useState(0);
+  const [plan, setPlan] = useState<number | null>(null);
+  const [extras, setExtras] = useState<number[]>([]);
   return (
     <div className="min-h-screen w-screen">
       <TopBar />
@@ -155,6 +168,30 @@ export function Container() {
       <InfoTexts />
       <BookingIntro />
       <Booking />
+       <Step n="05" title="Afronden" note="*Staat uw gewenste datum of tijd er niet bij? Neem gerust contact met ons op via de chat.">
+          <div className="grid gap-8 md:grid-cols-2">
+            <dl className="space-y-3 rounded-2xl bg-card p-6">
+              {[
+                ["Voertuigtype", VEHICLES[veh]![0]],
+                ["Gekozen pakket", plan === null ? "Geen pakket geselecteerd" : PLANS[plan]!.name],
+                ["Extra opties", extras.length ? extras.map((e) => EXTRAS[e]!.name).join(", ") : "Geen extra opties geselecteerd"],
+                ["Boekingsdatum", slot ?? "Geen datum geselecteerd"],
+                ["Boekingsduur", `${dur} minuten`],
+              ].map(([k, v]) => <div key={k}><dt className="text-sm font-semibold">{k}</dt><dd className="text-muted-foreground">{v}</dd></div>)}
+              <div className="border-t pt-3"><dt className="text-sm font-semibold">Totaalbedrag incl. BTW</dt><dd className="font-display text-3xl font-bold text-accent">{eur(total)}</dd></div>
+            </dl>
+            <div className="space-y-4">
+              <button disabled={plan === null || !slot} onClick={() => setDone(true)} className="w-full rounded-full bg-go py-4 text-lg font-bold text-go-foreground disabled:opacity-50">Bevestig boeking</button>
+              {done && <p className="rounded-lg bg-card p-4 font-semibold text-go">Bedankt! Wij bevestigen uw poetsbeurt zo snel mogelijk.</p>}
+              <ul className="space-y-1 text-sm text-muted-foreground">
+                <li>* Prijs is incl. voorrijkosten en 21% BTW. U betaalt pas als wij klaar zijn.</li>
+                <li>Het gekozen pakket kan, mits gewenst, ter plaatse worden gewijzigd.</li>
+                <li>Op al onze werkzaamheden zijn onze algemene voorwaarden van toepassing.</li>
+                <li>Uw gegevens worden niet gedeeld.</li>
+              </ul>
+            </div>
+          </div>
+        </Step>
       <Contact/>
       {/* <BrandsOffer /> */}
 
