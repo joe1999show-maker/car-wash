@@ -26,6 +26,15 @@ const USP = [
   { icon: Sparkles, t: "100% tevredenheidsgarantie" },
 ];
 
+interface ORDER_DETAILS {
+  client_details:{
+    name:string;
+    email: string;
+    phone: string;
+  };
+  calculated_total: number;
+  chosen_Plan: string |null |undefined;
+}
 const REVIEWS = [
   {
     n: "Wilmer",
@@ -69,6 +78,7 @@ function Stars({ size = 16 }: { size?: number }) {
 export function Container() {
   useReveal();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [order,setOrder]=useState<ORDER_DETAILS>();
   return (
     <div className="min-h-screen w-screen">
       <TopBar />
