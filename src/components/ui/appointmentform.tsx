@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 // AKfycby_V0kiJSTO22Yr9gJWT926i2E7BGTqAyD9zBcsD4mVyfB8_LNEm7p_XwM3DIwsfjQy
 // const PUBLIC_FORM_ID =
 //   "1FAIpQLSdVEd0on1yuaoyYj5hvK5MsOg57I-GlNxL01zzUVqHPkJqJDA";
-const API_URL = 'https://script.google.com/macros/s/AKfycby_V0kiJSTO22Yr9gJWT926i2E7BGTqAyD9zBcsD4mVyfB8_LNEm7p_XwM3DIwsfjQy/exec';
+const API_URL = `${import.meta.env['VITE_API_URL']}`
 
 interface BookingProps {
   calculatedTotal: number;
@@ -57,6 +57,7 @@ export function AppointmentForm({ calculatedTotal, chosenPlanDetails, duration }
     return () => {
       cancelled = true;
     };
+   
   }, [duration, reloadKey]);
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -216,7 +216,7 @@ export function Services() {
               </div>
               <div className="flex items-start justify-between gap-3 p-5">
                 <h3 className="font-semibold">{s.t}</h3>
-               <BrushCleaning className="shrink-0 text-primary transition-transform group-hover:translate-x-1"/>
+                <BrushCleaning className="shrink-0 text-primary transition-transform group-hover:translate-x-1" />
                 {/* <ArrowRight className="shrink-0 text-primary transition-transform group-hover:translate-x-1" /> */}
               </div>
             </a>
@@ -262,41 +262,29 @@ const TEXTS = [
 ];
 
 export function InfoTexts() {
-  const [open, setOpen] = useState(0);
   return (
-    // <section className="bg-secondary py-12">
-      <div id="over-ons" className="mx-auto max-w-4xl space-y-4 px-6">
-        {TEXTS.map((t, i) => (
-          <div key={t.h} className="reveal rounded-2xl bg-card p-6 shadow-sm">
-            {/* <button
-              onClick={() => setOpen(open === i ? -1 : i)}
-              className="flex w-full items-center justify-between text-left"
-            > */}
-              <h2 className="text-2xl font-semibold">{t.h}</h2>
-              {/* <span
-                className={`text-3xl text-primary transition-transform ${open === i ? "rotate-45" : ""}`}
-              >
-                +
-              </span> */}
-            {/* </button> */}
-            <div
-              className={`grid transition-all duration-500 ${open === i ? "mt-4 grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-            >
-              <ul>
-                <div className="space-y-3 overflow-hidden text-muted-foreground">
-                  {t.p.map((p) => (
-                    // <p key={b.b.slice(0, 20)}>{p}</p>)}
-                    <div>
-                    <h3 key={p.t.slice(0.6)}>{p.t}</h3>
-                    <p key={p.b.slice(0,20)}>{p.b} </p>
-                    </div>
-                  ))}
-                </div>
-              </ul>
-            </div>
+    <div id="over-ons" className="mx-auto max-w-4xl space-y-4 px-6">
+      {TEXTS.map((t, i) => (
+        <div key={i} className="reveal rounded-2xl bg-card p-6 shadow-sm">
+          <h2 className="text-2xl font-semibold">{t.h}</h2>
+
+          <div
+            className={`grid transition-all duration-500  "mt-4 grid-rows-[1fr]`}
+          >
+            <ul>
+              <div className="space-y-3 overflow-hidden text-muted-foreground">
+                {t.p.map((p, pIndex) => (
+                  <div key={pIndex}>
+                    <h3>{p.t}</h3>
+                    <p>{p.b}</p>
+                  </div>
+                ))}
+              </div>
+            </ul>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
+    </div>
     // </section>
   );
 }
@@ -445,16 +433,16 @@ export function ChatWidget() {
   );
 }
 
-export function Contact(){
+export function Contact() {
   // Replace with your actual WhatsApp business number (include country code, omit spaces/pluses)
   const phoneNumber = "+32499579687";
   const message = encodeURIComponent("Hi KCleaning, ik heb een vraag over uw diensten.");
 
   // Notice the forward slash right after wa.me, and no slash after the phone number
   const whatsAppUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-  return(
+  return (
     // <div className="grid place-items-center h-48 w-full bg-gray-20">
-    
+
     // <div className=" allign-middle w-80 animate-fadeup overflow-hidden rounded-2xl bg-card shadow-2xl ">
     //       <a
     //         href={whatsAppUrl}
@@ -466,20 +454,20 @@ export function Contact(){
     //       </a>
     //     </div>
     //     </div>
-    <div className="grid place-items-center h-48 w-full bg-gray-20">
-  <div className="w-80 animate-fadeup overflow-hidden rounded-2xl bg-card shadow-2xl">
-    <a
-      href={whatsAppUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="m-4 flex items-center justify-center gap-2 rounded-full bg-go py-3 font-semibold text-go-foreground text-center"
-    >
-      <MessageCircle size={30} className="shrink-0" /> 
-      <span>
-      WhatsApp <br /> +32472732908
-      </span>
-    </a>
-  </div>
-</div>
-  )
+    <div id="contact" className="grid place-items-center h-48 w-full bg-gray-20">
+      <div className="w-80 animate-fadeup overflow-hidden rounded-2xl bg-card shadow-2xl">
+        <a
+          href={whatsAppUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="m-4 flex items-center justify-center gap-2 rounded-full bg-go py-3 font-semibold text-go-foreground text-center"
+        >
+          <MessageCircle size={30} className="shrink-0" />
+          <span>
+            WhatsApp <br /> +32472732908
+          </span>
+        </a>
+      </div>
+    </div>
+  );
 }

@@ -3,14 +3,14 @@ import KCleanAnimatedBanner from "./banner";
 import { ArrowRight, Menu, X } from "lucide-react";
 
 const NAV = [
-  { text: "Home", route: "home" },
-  { text: "Onze diensten", route: "diensten" },
-  { text: "Keramische coating", route: "keramische coating" },
-  { text: "Referenties", route: "referencies" },
-  { text: "Over ons", route: "over-ons" },
-  { text: "Contact", route: "contact" },
-  { text: "Blog", route: "blog" },
-  { text: "Shop", route: "shop" },
+  { text: "Home", route: "/" },
+  { text: "Onze diensten", route: "#onze-diensten" },
+  // { text: "Keramische coating", route: "keramische coating" },
+  // { text: "Referenties", route: "referencies" },
+  { text: "Over ons", route: "#over-ons" },
+  { text: "Contact", route: "#contact" },
+  // { text: "Blog", route: "blog" },
+  // { text: "Shop", route: "shop" },
 ];
 
 
@@ -44,89 +44,29 @@ export default function NavbarHeader() {
 
         {/* CENTER NAVIGATION LINKS SECTION */}
         <nav className="hidden md:flex flex-1 items-center justify-center space-x-4 lg:space-x-6">
-          <a
-            href="#"
-            className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
-          >
-            Home
-          </a>
-          <a
-            href="#onze-diensten"
-            className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
-          >
-            Onze diensten
-          </a>
-          {/* <a
-            href="#"
-            className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
-          >
-            Keramische coating
-          </a>
-          <a
-            href="#"
-            className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
-          >
-            Referenties
-          </a> */}
-          <a
-            href="#over-ons"
-            className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
-          >
-            Over ons
-          </a>
-          <a
-            href="#"
-            className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
-          >
-            Contact
-          </a>
-          {/* <a
-            href="#"
-            className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
-          >
-            Blog
-          </a>
-          <a
-            href="#"
-            className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
-          >
-            Shop
-          </a> */}
+{NAV.map((n) => (
+              <a
+                key={n.text}
+                href={n.route}
+               className="text-sm font-semibold text-gray-700 hover:text-[#1fb6ff] transition-colors whitespace-nowrap"
+              >
+                {n.text}
+              </a>
+            ))}
         </nav>
 
-        {/* RIGHT ACTION BUTTON SECTION */}
-        {/* <div className="flex items-center shrink-0">
-          <a
-            href="#"
-            className="rounded-full bg-orange-600 px-5 py-2.5 text-sm font-bold text-white shadow-md hover:bg-orange-700 transition-colors flex items-center space-x-2"
-          >
-            <span>Referenties</span>
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-              />
-            </svg>
-          </a>
-        </div> */}
+        
       </div>
         {/* Action Button & Hamburger Toggle Wrapper */}
         <div className="ml-auto mr-6 flex items-center gap-4">
           {/* CTA Link (Hidden on small mobile viewports to save space) */}
-          <a
+          {/* <a
             href="#reviews"
             className="group hidden sm:inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground hover:opacity-90"
           >
             Referenties{" "}
             <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-          </a>
+          </a> */}
 
           {/* 3. Hamburger Button Control (Visible on mobile, hidden on lg screens) */}
           <button
@@ -158,13 +98,13 @@ export default function NavbarHeader() {
               </a>
             ))}
             {/* CTA copy specifically inside mobile menu framework for small viewports */}
-            <a
+            {/* <a
               href="#reviews"
               onClick={() => setIsMobileMenuOpen(false)}
               className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary py-3 font-semibold text-primary-foreground sm:hidden"
             >
               Referenties <ArrowRight size={16} />
-            </a>
+            </a> */}
           </nav>
         </div>
     </header>

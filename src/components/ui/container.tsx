@@ -159,7 +159,7 @@ export function Container() {
       {/* <BrandsOffer /> */}
 
       {/* <Partners /> */}
-      <Footer />
+      {/* <Footer /> */}
       <ChatWidget />
     
     </div>
