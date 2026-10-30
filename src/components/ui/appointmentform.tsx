@@ -10,6 +10,7 @@ interface BookingProps {
   calculatedTotal: number;
   chosenPlanDetails: string | null | undefined;
   duration: number; // total minutes: plan + extras
+  // setPlanDetails: ()=>{}
 }
 
 type Slots = Record<string, string[]>;
@@ -23,7 +24,9 @@ const dayLabel = (key: string) => {
   });
 };
 
-export function AppointmentForm({ calculatedTotal, chosenPlanDetails, duration }: BookingProps) {
+export function AppointmentForm({ calculatedTotal, chosenPlanDetails, duration
+  // , setPlanDetails 
+}: BookingProps) {
   const [slots, setSlots] = useState<Slots>({});
   const [slotsLoading, setSlotsLoading] = useState(true);
   const [slotsError, setSlotsError] = useState(false);
@@ -63,6 +66,7 @@ export function AppointmentForm({ calculatedTotal, chosenPlanDetails, duration }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
 
     if (formData.website) {
       setSuccess(true); // honeypot: bot

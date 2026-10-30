@@ -27,6 +27,15 @@ const USP = [
   { icon: Sparkles, t: "100% tevredenheidsgarantie" },
 ];
 
+interface ORDER_DETAILS {
+  client_details:{
+    name:string;
+    email: string;
+    phone: string;
+  };
+  calculated_total: number;
+  chosen_Plan: string |null |undefined;
+}
 const REVIEWS = [
   {
     n: "Wilmer",
