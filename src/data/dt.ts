@@ -1,10 +1,10 @@
 export type PLAN = {
-    name: string;
-    description: string;
-    price: number;
-    items : string[];
-    dur: number
-}
+  name: string;
+  description: string;
+  price: number;
+  items: string[];
+  dur: number;
+};
 export const PLANS: PLAN[] = [
   {
     name: "Basic Shine",
@@ -17,7 +17,7 @@ export const PLANS: PLAN[] = [
       " Reinigen van de deurpanelen",
       "Verzorgde afwerking van het interieur",
     ],
-    dur:60
+    dur: 60,
   },
   {
     name: "Comfort Deep Cleaning",
@@ -32,7 +32,7 @@ export const PLANS: PLAN[] = [
       "Extra aandacht voor details",
       "Zorgvuldige afwerking met oog voor detail",
     ],
-    dur:60
+    dur: 60,
   },
   {
     name: "Premium Detailing",
@@ -46,15 +46,15 @@ export const PLANS: PLAN[] = [
       "Stoomreiniging waar geschikt",
       "Verwijderen van hardnekkig vuil en onaangename geuren, voor zover mogelijk",
     ],
-    dur:60
+    dur: 60,
   },
 ];
 
-type EXTRA ={
-    name:string;
-    price: number;
-    dur: number
-}
+export type EXTRA = {
+  name: string;
+  price: number;
+  dur: number;
+};
 export const EXTRAS: EXTRA[] = [
   { name: "Honden- en kattenharen verwijderen", price: 39.9, dur: 30 },
   { name: "Stoomreiniging", price: 24.9, dur: 20 },
@@ -80,3 +80,33 @@ export const VEHICLES: VEHICLE[] = [
   ["Bestelwagen (bijv. VW Caddy)", 30],
   ["Bestelbus (bijv. Mercedes Vito)", 40],
 ] as const;
+
+const REVIEWS = [
+  {
+    n: "Wilmer",
+    d: "10 oktober 2026",
+    t: "Snelle en uiterst nauwkeurige Deep Clean van je auto. Aanrader!",
+  },
+  {
+    n: "sabri nasri",
+    d: "26 september 2026",
+    t: "Mijn auto zag er na de poetsbeurt echt als nieuw uit. De lak glanst weer, de kleine krasjes zijn netjes aangepakt en het interieur is echt superfris gemaakt. Professioneel en vriendelijk.",
+  },
+  { n: "Mateusz", d: "19 september 2026", t: "Top quality top service" },
+  {
+    n: "Peter Stremler",
+    d: "28 augustus 2026",
+    t: "Wat een resultaat! Schoon op een geheel nieuw niveau. Echt tot in de kleinste details. Klasse!",
+  },
+];
+
+export interface ORDER_DETAILS {
+  clientDetails:CLIENT_DETAILS;
+  calculatedTotal: number;
+  chosenPlanDetails: string | null | undefined;
+}
+export interface CLIENT_DETAILS {
+  name: string;
+  email: string;
+  phone: string;
+}

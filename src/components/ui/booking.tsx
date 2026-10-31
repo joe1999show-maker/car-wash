@@ -2,81 +2,29 @@ import { useMemo, useState } from "react";
 import { Step } from "./step";
 import { Check } from "lucide-react";
 import { AppointmentForm } from "./appointmentform";
+import { CLIENT_DETAILS, EXTRAS, PLANS, VEHICLES } from "@/data/dt";
 
-const VEHICLES = [
-  ["Normale auto (bijv. VW Golf, Audi A3)", 0],
-  ["Middelgrote auto (bijv. Audi A4, A5)", 10],
-  ["Grote auto (bijv. Audi A6, A7)", 20],
-  ["SUV (bijv. Audi Q3, Q5)", 25],
-  ["Pick-up (bijv. Dodge Ram)", 35],
-  ["Bestelwagen (bijv. VW Caddy)", 30],
-  ["Bestelbus (bijv. Mercedes Vito)", 40],
-] as const;
-export const PLANS = [
-  {
-    name: "Basic Shine",
-    description: "Een grondige opfrisbeurt voor een schoon en verzorgd auto-interieur.",
-    // items:[...IN],
-    price: 49,
-    items: [
-      "Stofzuigen van de auto",
-      "Reinigen van het dashboard en de kunststof onderdelen",
-      " Reinigen van de deurpanelen",
-      "Verzorgde afwerking van het interieur",
-    ],
-    dur:60
-  },
-  {
-    name: "Comfort Deep Cleaning",
-    description: "Voor wie zijn auto grondig wil laten reinigen.",
-    // items:[...IN],
-    price: 129,
-    items: [
-      "Alles uit het Basic Shine-pakket",
-      "Grondige reiniging van moeilijk bereikbare plaatsen",
-      "Reinigen van matten en tapijten",
-      "Aanpak van zichtbare vlekken",
-      "Extra aandacht voor details",
-      "Zorgvuldige afwerking met oog voor detail",
-    ],
-    dur:60
-  },
-  {
-    name: "Premium Detailing",
-    description: "De ultieme behandeling voor een fris, verzorgd en luxueus auto-interieur.",
-    // items:[...IN],
-    price: 99,
-    items: [
-      "Intensieve interieurreiniging",
-      "Grondige reiniging van stoelen en tapijten, afhankelijk van het materiaal",
-      "Reinigen van kunststof onderdelen en details",
-      "Stoomreiniging waar geschikt",
-      "Verwijderen van hardnekkig vuil en onaangename geuren, voor zover mogelijk",
-    ],
-    dur:60
-  },
-];
-const EXTRAS = [
-  { name: "Honden- en kattenharen verwijderen", price: 39.9, dur: 30 },
-  { name: "Stoomreiniging", price: 24.9, dur: 20 },
-  { name: "Hardnekkige vlekken behandelen", price: 49.9, dur: 40 },
-  { name: "Hemelbekleding reinigen", price: 34.9, dur: 25 },
-  { name: "Koplampen polijsten", price: 34.9, dur: 25 },
-  { name: "Motorruimte reinigen", price: 34.9, dur: 25 },
-  {
-    name: "Exterieur reinigen zonder traditionele wasbeurt, afhankelijk van de vervuiling en geschiktheid van de lak",
-    price: 34.9,
-    dur: 25,
-  },
-];
 
 const eur = (n: number) => `€${n.toFixed(2)}`;
 const durTxt = (m: number) => `${Math.floor(m / 60)} uur ${m % 60 ? `${m % 60} min` : ""}`.trim();
 
-export default function Booking() {
-  const [veh, setVeh] = useState(0);
-  const [plan, setPlan] = useState<number | null>(null);
-  const [extras, setExtras] = useState<number[]>([]);
+interface BookingProps {
+  plan: number | null;
+  extras: number[];
+  // setVeh: (v: number) => void;
+  setPlan: (p: number | null) => void;
+  setExtras: React.Dispatch<React.SetStateAction<number[]>>;
+  total: number;
+  dur: number;
+  chosenPlanDetails: string | null;
+  onFormSubmit: (clientDetails: CLIENT_DETAILS) => void;
+}
+
+export default function Booking({
+plan, extras, setPlan, setExtras,
+  total, dur, chosenPlanDetails, onFormSubmit
+}: BookingProps) {
+ 
   const [slot, setSlot] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const days = useMemo(
@@ -88,27 +36,27 @@ export default function Booking() {
       }),
     [],
   );
-  const total =
-    plan === null
-      ? 0
-      : PLANS[plan]!.price 
-      // + VEHICLES[veh]![1] 
-      // + extras.reduce((s, e) => s + EXTRAS[e]!.price, 0);
+  // const total =
+  //   plan === null
+  //     ? 0
+  //     : PLANS[plan]!.price 
+  //     // + VEHICLES[veh]![1] 
+  //     // + extras.reduce((s, e) => s + EXTRAS[e]!.price, 0);
   
-  const dur = plan === null ? 0 : PLANS[plan]!.dur + extras.reduce((s, e) => s + EXTRAS[e]!.dur, 0);
+  // const dur = plan === null ? 0 : PLANS[plan]!.dur + extras.reduce((s, e) => s + EXTRAS[e]!.dur, 0);
 
-  const extraNames = extras.map((e) => EXTRAS[e]!.name);
+  // const extraNames = extras.map((e) => EXTRAS[e]!.name);
 
-  const chosenPlanDetails =
-    plan === null
-      ? null
-      : [
-          `${PLANS[plan]!.name} (${PLANS[plan]!.description})`,
-          `Voertuig: ${VEHICLES[veh]![0]}`,
-          extraNames.length ? `Extra's: ${extraNames.join(", ")}` : null,
-        ]
-          .filter(Boolean)
-          .join(" | ");
+  // const chosenPlanDetails =
+  //   plan === null
+  //     ? null
+  //     : [
+  //         `${PLANS[plan]!.name} (${PLANS[plan]!.description})`,
+  //         `Voertuig: ${VEHICLES[veh]![0]}`,
+  //         extraNames.length ? `Extra's: ${extraNames.join(", ")}` : null,
+  //       ]
+  //         .filter(Boolean)
+  //         .join(" | ");
   return (
     <section id="afspraak" className="bg-secondary">
       <div className="mx-auto max-w-6xl px-6 py-10">
@@ -142,7 +90,8 @@ export default function Booking() {
               >
                 <h3 className="text-xl font-semibold">{p.name}</h3>
                 <p className="mt-2 font-display text-4xl font-bold text-accent">
-                  {eur(p.price + VEHICLES[veh]![1])}
+                  {/* {eur(p.price + VEHICLES[veh]![1])} */}
+                  {eur(p.price)}
                 </p>
                 {/* <p className="text-sm text-muted-foreground">{durTxt(p.dur)}</p> */}
                 <ul className="mt-4 flex-1 space-y-2 text-sm">
@@ -200,11 +149,13 @@ export default function Booking() {
         >
           <div className="grid gap-8 md:grid-cols-1">
           
-            <AppointmentForm 
+            {/* <AppointmentForm 
             calculatedTotal={total} 
             chosenPlanDetails={chosenPlanDetails}
             duration={dur}
-            />
+            /> */}
+            
+    <AppointmentForm onFormSubmit={onFormSubmit} />
           
           </div>
         </Step>
