@@ -464,7 +464,7 @@ export function Contact() {
         >
           <MessageCircle size={30} className="shrink-0" />
           <span>
-            WhatsApp <br /> +32472732908
+          Contacteer ons via  WhatsApp <br /> +32472732908
           </span>
         </a>
       </div>

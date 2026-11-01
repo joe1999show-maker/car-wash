@@ -24,7 +24,7 @@ export const PLANS = [
       " Reinigen van de deurpanelen",
       "Verzorgde afwerking van het interieur",
     ],
-    dur:60
+    dur: 60,
   },
   {
     name: "Comfort Deep Cleaning",
@@ -39,7 +39,7 @@ export const PLANS = [
       "Extra aandacht voor details",
       "Zorgvuldige afwerking met oog voor detail",
     ],
-    dur:60
+    dur: 60,
   },
   {
     name: "Premium Detailing",
@@ -53,7 +53,7 @@ export const PLANS = [
       "Stoomreiniging waar geschikt",
       "Verwijderen van hardnekkig vuil en onaangename geuren, voor zover mogelijk",
     ],
-    dur:60
+    dur: 60,
   },
 ];
 const EXTRAS = [
@@ -88,27 +88,37 @@ export default function Booking() {
       }),
     [],
   );
-  const total =
-    plan === null
-      ? 0
-      : PLANS[plan]!.price 
-      // + VEHICLES[veh]![1] 
-      // + extras.reduce((s, e) => s + EXTRAS[e]!.price, 0);
-  
+  const total = plan === null ? 0 : PLANS[plan]!.price;
+  // + VEHICLES[veh]![1]
+  // + extras.reduce((s, e) => s + EXTRAS[e]!.price, 0);
+
   const dur = plan === null ? 0 : PLANS[plan]!.dur + extras.reduce((s, e) => s + EXTRAS[e]!.dur, 0);
 
   const extraNames = extras.map((e) => EXTRAS[e]!.name);
 
+  // const chosenPlanDetails =
+  //   plan === null
+  //     ? null
+  //     : [
+  //         `${PLANS[plan]!.name} (${PLANS[plan]!.description})`,
+  //         // `Voertuig: ${VEHICLES[veh]![0]}`,
+  //         extraNames.length ? `Extra's: ${extraNames.join(", ")}` : null,
+  //       ]
+  //         .filter(Boolean)
+  //         .join(" | ");
+
   const chosenPlanDetails =
-    plan === null
-      ? null
-      : [
-          `${PLANS[plan]!.name} (${PLANS[plan]!.description})`,
-          `Voertuig: ${VEHICLES[veh]![0]}`,
-          extraNames.length ? `Extra's: ${extraNames.join(", ")}` : null,
-        ]
-          .filter(Boolean)
-          .join(" | ");
+  plan === null
+    ? null
+    : [
+        `*Pakket:* ${PLANS[plan]!.name} (${PLANS[plan]!.description})`,
+        extraNames.length 
+          ? `*Extra's:*\n${extraNames.map(extra => `  • ${extra}`).join("\n")}` 
+          : null,
+      ]
+        .filter(Boolean)
+        .join("\n\n"); // Separates the main plan and the extras list by an empty line
+        
   return (
     <section id="afspraak" className="bg-secondary">
       <div className="mx-auto max-w-6xl px-6 py-10">
@@ -198,14 +208,50 @@ export default function Booking() {
           title="Staat uw gewenste datum "
           note="*Staat uw gewenste datum of tijd er niet bij? Neem gerust contact met ons op via de chat."
         >
-          <div className="grid gap-8 md:grid-cols-1">
-          
-            <AppointmentForm 
-            calculatedTotal={total} 
-            chosenPlanDetails={chosenPlanDetails}
-            duration={dur}
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="w-fit h-fit grid">
+              <dl className="space-y-3 rounded-2xl bg-card p-6">
+                <h3 className="text-xl font-bold text-navy border-b pb-2 mb-4">Samenvatting</h3>
+                {[
+                  // ["Voertuigtype", VEHICLES[veh]![0]],
+                  [
+                    "Gekozen pakket",
+                    plan === null ? "Geen pakket geselecteerd" : PLANS[plan]!.name,
+                  ],
+                  [
+                    "Extra opties",
+                    extras.length ? (
+                      <div className="flex flex-col space-y-1">
+                        {extras.map((e) => (
+                          <span key={e}>- {EXTRAS[e]!.name}.</span>
+                        ))}
+                      </div>
+                    ) : (
+                      "Geen extra opties geselecteerd"
+                    ),
+                    // ? extras.map((e) => EXTRAS[e]!.name)
+                    // : "Geen extra opties geselecteerd",
+                  ],
+
+                  // ["Boekingsdatum", slot ?? "Geen datum geselecteerd"],
+                  // ["Boekingsduur", `${dur} minuten`],
+                ].map(([k, v]) => (
+                  <div key={k as string}>
+                    <dt className="text-sm font-semibold">{k}</dt>
+                    <dd className="text-muted-foreground">{v}</dd>
+                  </div>
+                ))}
+                <div className="border-t pt-3">
+                  <dt className="text-sm font-semibold">Totaalbedrag incl. BTW</dt>
+                  <dd className="font-display text-3xl font-bold text-accent">{eur(total)}</dd>
+                </div>
+              </dl>
+            </div>
+            <AppointmentForm
+              calculatedTotal={total}
+              chosenPlanDetails={chosenPlanDetails}
+              duration={dur}
             />
-          
           </div>
         </Step>
       </div>

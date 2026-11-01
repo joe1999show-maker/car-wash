@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 // AKfycby_V0kiJSTO22Yr9gJWT926i2E7BGTqAyD9zBcsD4mVyfB8_LNEm7p_XwM3DIwsfjQy
 // const PUBLIC_FORM_ID =
 //   "1FAIpQLSdVEd0on1yuaoyYj5hvK5MsOg57I-GlNxL01zzUVqHPkJqJDA";
-const API_URL = `${import.meta.env['VITE_API_URL']}`
+const API_URL = `${import.meta.env["VITE_API_URL"]}`;
 
 interface BookingProps {
   calculatedTotal: number;
@@ -24,95 +24,77 @@ const dayLabel = (key: string) => {
   });
 };
 
-export function AppointmentForm({ calculatedTotal, chosenPlanDetails, duration
-  // , setPlanDetails 
+export function AppointmentForm({
+  calculatedTotal,
+  chosenPlanDetails,
+  duration,
+  // , setPlanDetails
 }: BookingProps) {
   const [slots, setSlots] = useState<Slots>({});
-  const [slotsLoading, setSlotsLoading] = useState(true);
-  const [slotsError, setSlotsError] = useState(false);
-  const [reloadKey, setReloadKey] = useState(0);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    website: "",
+    date: "",
+    time: "",
+  });
 
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", website: "" });
-
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
   // Load free slots whenever the needed duration changes (or after a "slot taken" error)
-  useEffect(() => {
-    if (!duration) return;
-    let cancelled = false;
-    setSlotsLoading(true);
-    setSlotsError(false);
-    fetch(`${API_URL}?duration=${duration}`)
-      .then((r) => r.json())
-      .then((data) => {
-        console.log({data});
-        if (cancelled) return;
-        setSlots(data.slots ?? {});
-        setDate("");
-        setTime("");
-      })
-      .catch(() => !cancelled && setSlotsError(true))
-      .finally(() => !cancelled && setSlotsLoading(false));
-    return () => {
-      cancelled = true;
-    };
-   
-  }, [duration, reloadKey]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-
     if (formData.website) {
       setSuccess(true); // honeypot: bot
       return;
     }
-    if (!date || !time) {
-      setError("Kies eerst een datum en tijdstip.");
+    if (!formData.date) {
+      setError("Kies een datum.");
+      return;
+    }
+      if (!formData.time) {
+      setError("Kies een tijd.");
       return;
     }
 
-    setLoading(true);
-    try {
-      // text/plain avoids a CORS preflight, which Apps Script cannot answer
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          website: formData.website,
-          date,
-          time,
-          // duration,
-          options: chosenPlanDetails || "Geen pakket geselecteerd",
-          total: `€${calculatedTotal.toFixed(2)}`,
-        }),
-      });
-      const data = await res.json();
-
-      if (data.ok) {
-        setSuccess(true);
-      } else if (data.error === "slot_taken") {
-        setError("Dit tijdstip is net bezet. Kies een ander tijdstip.");
-        setReloadKey((k) => k + 1);
-      } else if (data.error === "rate_limit") {
-        setError("Te veel pogingen. Probeer het later opnieuw of neem telefonisch contact op.");
-      } else {
-        setError("Controleer uw gegevens en probeer het opnieuw.");
-      }
-    } catch (err) {
-      console.error("Booking error:", err);
-      setError("Er ging iets mis bij het versturen. Probeer het opnieuw of neem telefonisch contact op.");
-    } finally {
-      setLoading(false);
+    if (!chosenPlanDetails) {
+      setError("Kies eerst een pakket!");
+      return;
     }
+
+       const formattedDate = formData.date.split("-").reverse().join("-");
+const isDesktop = !/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+       const messageText = 
+`✨ *NIEUWE BOEKING* ✨
+
+👤 *Klantgegevens:*
+• *Naam:* ${formData.name}
+• *E-mail:* ${formData.email}
+• *Telefoon:* ${formData.phone}
+
+📅 *Afspraak Details:*
+• *Datum:* ${formattedDate}
+• *Tijdstip:* ${formData.time} uur
+
+
+🛠️ *Overzicht:*
+${chosenPlanDetails || "Geen specifieke details opgegeven"}`;
+//💶 *Totaalprijs:* €${calculatedTotal.toFixed(2)}
+    const COMPANY_WHATSAPP_NUMBER = "+32489391378"; 
+     const encodedMessage = encodeURIComponent(messageText);
+  const whatsAppUrl = isDesktop
+  ? `https://web.whatsapp.com/send?phone=${COMPANY_WHATSAPP_NUMBER}&text=${encodedMessage}`
+  : `https://whatsapp.com{COMPANY_WHATSAPP_NUMBER}&text=${encodedMessage}`;
+
+       window.open(whatsAppUrl, "_blank", "noopener,noreferrer");
+
+    setSuccess(true);
   };
 
   if (success) {
@@ -136,63 +118,6 @@ export function AppointmentForm({ calculatedTotal, chosenPlanDetails, duration
       className="space-y-4 max-w-md mx-auto p-6 bg-card rounded-2xl border shadow-sm"
     >
       <h3 className="text-xl font-bold text-navy border-b pb-2 mb-4">Gegevens afronden</h3>
-
-      <div>
-        <label className="block text-sm font-semibold mb-2 text-gray-700">Kies een dag</label>
-        {!duration ? (
-          <p className="text-sm text-gray-500">Kies eerst een pakket.</p>
-        ) : slotsLoading ? (
-          <p className="text-sm text-gray-500">Beschikbaarheid laden...</p>
-        ) : slotsError ? (
-          <p className="text-sm text-red-600">
-            Beschikbaarheid kon niet geladen worden.{" "}
-            <button type="button" className="underline" onClick={() => setReloadKey((k) => k + 1)}>
-              Opnieuw proberen
-            </button>
-          </p>
-        ) : days.length === 0 ? (
-          <p className="text-sm text-gray-500">Geen beschikbare momenten gevonden. Neem contact met ons op.</p>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {days.map((d) => (
-              <button
-                key={d}
-                type="button"
-                onClick={() => {
-                  setDate(d);
-                  setTime("");
-                }}
-                className={`px-3 py-2 rounded-xl border text-sm ${
-                  date === d ? "bg-primary text-white border-primary" : "border-gray-200"
-                }`}
-              >
-                {dayLabel(d)}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {date && (
-        <div>
-          <label className="block text-sm font-semibold mb-2 text-gray-700">Kies een tijdstip</label>
-          <div className="grid grid-cols-4 gap-2">
-            {slots[date]!.map((t) => (
-              <button
-                key={t}
-                type="button"
-                onClick={() => setTime(t)}
-                className={`py-2 rounded-xl border text-sm ${
-                  time === t ? "bg-primary text-white border-primary" : "border-gray-200"
-                }`}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       <div>
         <label className="block text-sm font-semibold mb-1 text-gray-700">Naam</label>
         <input
@@ -227,6 +152,29 @@ export function AppointmentForm({ calculatedTotal, chosenPlanDetails, duration
         </div>
       </div>
 
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-semibold mb-1 text-gray-700">datum</label>
+          <input
+            type="date"
+            required
+            className={inputClass}
+            value={formData.date}
+            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold mb-1 text-gray-700">Tijd</label>
+          <input
+            type="time"
+            required
+            className={inputClass}
+            value={formData.time} // FIX: Changed from formData.phone to formData.time
+            onChange={(e) => setFormData({ ...formData, time: e.target.value })} // FIX: Changed from phone to time
+          />
+        </div>
+      </div>
+
       {/* Honeypot: hidden from users, bots tend to fill it */}
       <div aria-hidden="true" style={{ position: "absolute", left: "-9999px" }}>
         <label>
@@ -242,9 +190,10 @@ export function AppointmentForm({ calculatedTotal, chosenPlanDetails, duration
       </div>
 
       {error && (
-        <p role="alert" className="text-sm text-red-600">
-          {error}
-        </p>
+       <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
+  <p className="font-bold">!!!</p>
+  <p>{error}</p>
+</div>
       )}
 
       <div className="pt-4 border-t mt-6 flex items-center justify-between">
@@ -254,10 +203,9 @@ export function AppointmentForm({ calculatedTotal, chosenPlanDetails, duration
         </div>
         <button
           type="submit"
-          disabled={loading || !duration}
           className="bg-primary text-white font-bold px-6 py-3.5 rounded-full hover:opacity-95 transition-opacity disabled:opacity-50 shadow-md"
         >
-          {loading ? "Verwerken..." : "Afspraak Plannen"}
+          Afspraak Plannen
         </button>
       </div>
     </form>

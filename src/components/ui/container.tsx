@@ -7,7 +7,7 @@ import {
   InfoTexts,
   Partners,
   Services,
-  Contact
+  Contact,
 } from "@/components/Sections";
 import Booking from "./booking";
 import KCleanAnimatedBanner from "./banner";
@@ -17,6 +17,7 @@ import { Gallery } from "./gallery";
 import { useEffect, useState } from "react";
 import NavBarHeader from "./navbarheader";
 import { Step } from "./step";
+import { EXTRAS, PLANS } from "@/data/dt";
 
 const USP = [
   { icon: Trophy, t: "Beste prijs/kwaliteit verhouding" },
@@ -28,13 +29,13 @@ const USP = [
 ];
 
 interface ORDER_DETAILS {
-  client_details:{
-    name:string;
+  client_details: {
+    name: string;
     email: string;
     phone: string;
   };
   calculated_total: number;
-  chosen_Plan: string |null |undefined;
+  chosen_Plan: string | null | undefined;
 }
 const REVIEWS = [
   {
@@ -148,8 +149,8 @@ export function Container() {
               dierenharen.
             </p>
             <p className="mt-5 text-base text-navy-foreground">
-              Wij komen naar jou toe in Beveren, Antwerpen, Sint-Niklaas en omgeving. Zo geniet je
-              van een perfect gereinigde auto zonder dat je zelf tijd hoeft te verliezen.
+              Wij komen naar jou toe in Beveren, Antwerp St-Niklaas en omgeving. Zo geniet je van
+              een perfect gereinigde auto zonder dat je zelf tijd hoeft te verliezen.
             </p>
             <p className="mt-5 text-base text-navy-foreground">
               Jouw auto verdient meer dan een gewone schoonmaakbeurt. Kies voor de professionele
@@ -177,37 +178,7 @@ export function Container() {
       <InfoTexts />
       <BookingIntro />
       <Booking />
-       <Step n="05" title="Afronden" note="*Staat uw gewenste datum of tijd er niet bij? Neem gerust contact met ons op via de chat.">
-          <div className="grid gap-8 md:grid-cols-2">
-            <dl className="space-y-3 rounded-2xl bg-card p-6">
-              {[
-                ["Voertuigtype", VEHICLES[veh]![0]],
-                ["Gekozen pakket", plan === null ? "Geen pakket geselecteerd" : PLANS[plan]!.name],
-                ["Extra opties", extras.length ? extras.map((e) => EXTRAS[e]!.name).join(", ") : "Geen extra opties geselecteerd"],
-                ["Boekingsdatum", slot ?? "Geen datum geselecteerd"],
-                ["Boekingsduur", `${dur} minuten`],
-              ].map(([k, v]) => <div key={k}><dt className="text-sm font-semibold">{k}</dt><dd className="text-muted-foreground">{v}</dd></div>)}
-              <div className="border-t pt-3"><dt className="text-sm font-semibold">Totaalbedrag incl. BTW</dt><dd className="font-display text-3xl font-bold text-accent">{eur(total)}</dd></div>
-            </dl>
-            <div className="space-y-4">
-              <button disabled={plan === null || !slot} onClick={() => setDone(true)} className="w-full rounded-full bg-go py-4 text-lg font-bold text-go-foreground disabled:opacity-50">Bevestig boeking</button>
-              {done && <p className="rounded-lg bg-card p-4 font-semibold text-go">Bedankt! Wij bevestigen uw poetsbeurt zo snel mogelijk.</p>}
-              <ul className="space-y-1 text-sm text-muted-foreground">
-                <li>* Prijs is incl. voorrijkosten en 21% BTW. U betaalt pas als wij klaar zijn.</li>
-                <li>Het gekozen pakket kan, mits gewenst, ter plaatse worden gewijzigd.</li>
-                <li>Op al onze werkzaamheden zijn onze algemene voorwaarden van toepassing.</li>
-                <li>Uw gegevens worden niet gedeeld.</li>
-              </ul>
-            </div>
-          </div>
-        </Step>
-      <Contact/>
-      {/* <BrandsOffer /> */}
-
-      {/* <Partners /> */}
-      {/* <Footer /> */}
-      <ChatWidget />
-    
+      <Contact />
     </div>
   );
 }
